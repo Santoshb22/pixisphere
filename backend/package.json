@@ -1,0 +1,17 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Pixisphere backend ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pixisphere",
+    "photographer",
+    "user",
+    "book-photographer"
+  ],
+  "author": "Santosh Bhardwaj",
+  "license": "ISC"
+}
