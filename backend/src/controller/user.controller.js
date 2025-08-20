@@ -31,9 +31,13 @@ const register = async (req, res) => {
             return res.status(409).json({message: "Email already exist"})
         }
 
-        const avatar = await uploadOnCloudinary(avatarLocalPath);
+        let avatarUrl = "";
 
-        const createNewUser =  await User.create({username, email, password, role, avatar: avatar?.url || ""})
+        if (avatarLocalPath) {
+        const avatarUploadResponse = await uploadOnCloudinary(avatarLocalPath);
+        avatarUrl = avatarUploadResponse?.url || "";
+        }
+        const createNewUser =  await User.create({username, email, password, role, avatar: avatarUrl || ""})
 
         const createdUser = await User.findById(createNewUser._id).select(
             "-password -refreshToken"
@@ -121,8 +125,44 @@ const logout = async (req, res) => {
     }
 }
 
+const generateNewRefreshToken = async(req, res) => {
+    try {
+        const incomingRefreshToken = req.cookies?.refreshToken || req.body.refreshToken;
+        if(!incomingRefreshToken) {
+            return res.status(401).json({message: "Unauthorized request"});
+        }
+
+        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+        
+        const user = await User.findById(decodedToken._id);
+
+        if(!user) {
+            return res.status(401).json({message: "Invalid refresh token"});
+        }
+
+        if(user.refreshToken !== incomingRefreshToken) {
+            return res.status(401).json({message: "Refresh token is expired or used"});
+        }
+
+        const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id);
+
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+
+        return res.status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json({message: "Access token refreshed"});
+    } catch (error) {
+        return res.status(401).json({message: error.message || "Invalid refresh token"});
+    }
+}
+
 export {
     register,
     login,
-    logout
+    logout,
+    generateNewRefreshToken
 }
