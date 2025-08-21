@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import uploadOnCloudinary from "../utils/cloudinary.js";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const generateAccessAndRefreshToken = async (userId) => {
 
@@ -31,13 +31,18 @@ const register = async (req, res) => {
             return res.status(409).json({message: "Email already exist"})
         }
 
-        let avatarUrl = "";
+        let avatar = {
+            cloudinaryAvatarUrl: "",
+            cloudinaryAvatarPublicId: ""
+        };
 
         if (avatarLocalPath) {
         const avatarUploadResponse = await uploadOnCloudinary(avatarLocalPath);
-        avatarUrl = avatarUploadResponse?.url || "";
+        avatar.cloudinaryAvatarUrl = avatarUploadResponse?.url || "";
+        avatar.cloudinaryAvatarPublicId = avatarUploadResponse?.public_id || ""
         }
-        const createNewUser =  await User.create({username, email, password, role, avatar: avatarUrl || ""})
+
+        const createNewUser =  await User.create({username, email, password, role, avatar})
 
         const createdUser = await User.findById(createNewUser._id).select(
             "-password -refreshToken"
@@ -160,9 +165,56 @@ const generateNewRefreshToken = async(req, res) => {
     }
 }
 
+const editAvatar = async(req, res) => {
+    try {
+        const avatarLocalPath = req.file?.path;
+
+        if(!avatarLocalPath) {
+            return res.status(400).json({message: "Avatar is required"});
+        }
+
+        const cloudinaryResponse = await uploadOnCloudinary(avatarLocalPath);
+        if(!cloudinaryResponse) {
+            return res.status(400).json({message: "Failed to upload new avatar"});
+        }
+
+        const avatar = {
+        cloudinaryAvatarUrl: cloudinaryResponse?.secure_url || "",
+        cloudinaryAvatarPublicId: cloudinaryResponse?.public_id || "",
+        };
+    
+        const user = await User.findById(req.user?._id);
+        if(!user) {
+            return res.status(404).json({message: "User not found"});
+        }
+
+        if(user.avatar?.cloudinaryAvatarPublicId) {
+            await deleteFromCloudinary(user.avatar?.cloudinaryAvatarPublicId);
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user?._id,
+            {
+                $set: {
+                    avatar
+                }
+            },
+            {
+                new: true
+            }
+        ).select("-password -refreshToken");
+
+        return res.status(200).json({message: "Avatar updated successfully", user: updatedUser});
+
+    } catch (error) {
+        return res.status(500).json({message: "Something went wrong"});
+    }
+}
+
 export {
     register,
     login,
     logout,
-    generateNewRefreshToken
+    generateNewRefreshToken,
+    editAvatar
 }

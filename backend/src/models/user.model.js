@@ -23,7 +23,13 @@ const userSchema = new mongoose.Schema(
         },
 
         avatar: {
-            type: String
+            cloudinaryAvatarUrl: {
+                type: String
+            },
+
+            cloudinaryAvatarPublicId: {
+                type: String
+            }
         },
 
         bookingHistory: [
