@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { generateNewRefreshToken, login, logout, register } from "../controller/user.controller.js";
 import upload from "../middlewares/multer.middleware.js";
-import verifyToken from "../middlewares/auth.middleware.js";
+import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 

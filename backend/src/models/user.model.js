@@ -82,7 +82,7 @@ userSchema.methods.generateAccessToken = function() {
 
     return jwt.sign(
         {
-            data: payload,
+            payload,
         },
             process.env.ACCESS_TOKEN_SECRET,
         { 

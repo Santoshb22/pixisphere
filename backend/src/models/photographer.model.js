@@ -9,6 +9,9 @@ const photographerSchema = new mongoose.Schema(
 
         name: {
             type: String,
+            trim: true,
+            minlength: [1, "Name cannot be less that 1 character"],
+            maxlength: [30, "Name cannot be grater than 30 charaycter"]
         },
 
         email: {
@@ -18,7 +21,7 @@ const photographerSchema = new mongoose.Schema(
             trim: true, 
         },
 
-        contactNumber: {
+        businessContactNumber: {
             type: Number,
         },
 

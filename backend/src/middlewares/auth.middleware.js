@@ -3,7 +3,7 @@ import User from "../models/user.model.js";
 
 const verifyToken = async (req, res, next) => {
     try {
-        const accessToken = req.cokkies?.accessToken || req.header(Authorization)?.replace("Bearer ", "");
+        const accessToken = req.cookies?.accessToken || req.header(Authorization)?.replace("Bearer ", "");
     
         if(!accessToken) {
             return res.status(401).json("Unauthorized user");
@@ -11,7 +11,7 @@ const verifyToken = async (req, res, next) => {
     
         const decodedAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
     
-        const user = await User.findById(decodedAccessToken._id).select("-password -refreshToken");
+        const user = await User.findById(decodedAccessToken.payload.id).select("-password -refreshToken");
     
         if(!user) return res.status(401).json({message: "Invalid access token"});
     
@@ -22,4 +22,23 @@ const verifyToken = async (req, res, next) => {
     }
 }
 
-export default verifyToken;
+const authorizedRole = (allowedRoles) => {
+    return (req, res, next) => {
+        const user = req.user;
+
+        if (!user) {
+            return res.status(401).json({ message: "User unauthenticated" });
+        }
+
+        if (!allowedRoles.includes(user.role)) {
+            return res.status(403).json({ message: "You're not authorized for this route" });
+        }
+
+        next();
+    }
+}
+
+export {
+    verifyToken,
+    authorizedRole
+} 

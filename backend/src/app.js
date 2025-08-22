@@ -12,6 +12,8 @@ app.use(cookieParser())
 
 //api routes
 import userRoute from "./routes/user.route.js";
+import photographerRoute from "./routes/photographer.route.js";
 
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/photographer", photographerRoute);
 export default app;
