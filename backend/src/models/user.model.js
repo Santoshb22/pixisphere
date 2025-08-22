@@ -99,7 +99,7 @@ userSchema.methods.generateRefreshToken = function() {
 
     return jwt.sign(
         {
-            data: payload,
+            payload,
         },
             process.env.REFRESH_TOKEN_SECRET,
         { 

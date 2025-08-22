@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
+import jwt from "jsonwebtoken";
 
 const generateAccessAndRefreshToken = async (userId) => {
 
@@ -138,8 +139,7 @@ const generateNewRefreshToken = async(req, res) => {
         }
 
         const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
-        
-        const user = await User.findById(decodedToken._id);
+        const user = await User.findById(decodedToken.payload.id);
 
         if(!user) {
             return res.status(401).json({message: "Invalid refresh token"});

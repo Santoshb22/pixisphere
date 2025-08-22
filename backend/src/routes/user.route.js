@@ -8,6 +8,6 @@ const router = Router();
 router.route("/register").post(upload.single('avatar'), register);
 router.route("/login").post(login);
 router.route("/logout").post(verifyToken, logout);
-router.route("refresh-token").post(generateNewRefreshToken);
+router.route("/refresh-token").post(generateNewRefreshToken);
 
 export default router;
