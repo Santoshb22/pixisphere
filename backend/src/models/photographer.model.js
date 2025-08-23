@@ -21,54 +21,20 @@ const photographerSchema = new mongoose.Schema(
             trim: true, 
         },
 
-        businessContactNumber: {
-            type: Number,
-        },
-
         bio: {
             type: String,
             trim: true,
         },
 
         thumbnail: {
-            type: String,
+            cloudinaryThumbnailUrl: {
+                type: String
+            },
+
+            cloudinaryThumbnailPublicId: {
+                type: String
+            }
         },
-
-        portfolio: [
-            {
-                image: {
-                    type: String, //cloudinary url
-                },
-
-                title: {
-                    type: String,
-                    minlength: [3, 'Title must be at least 3 characters long'],
-                    maxlength: [50, 'Title cannot exceed 50 characters'],     
-                    trim: true
-                }
-            }
-        ],
-
-        likedby: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User"
-            }
-        ],
-
-        ratings: [
-            {
-                user: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "User"
-                },
-                value: {
-                    type: Number,
-                    min: 1,
-                    max: 5
-                }
-            }
-        ],
 
         isPublic: {
             type: Boolean,
