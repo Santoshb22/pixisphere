@@ -1,4 +1,4 @@
-import Like from "../models/like.model";
+import Like from "../models/like.model.js";
 
 const toggleLike = async (req, res) => {
     try {

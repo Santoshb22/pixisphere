@@ -1,5 +1,5 @@
-import Portfolio from "../models/portfolio.model";
-import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary";
+import Portfolio from "../models/portfolio.model.js";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const addImageToPortfolio = async(req, res) => {
     try {

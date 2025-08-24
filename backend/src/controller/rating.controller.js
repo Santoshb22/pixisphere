@@ -1,4 +1,4 @@
-import Rating from "../models/rating.model";
+import Rating from "../models/rating.model.js";
 
 const updateRating = async(req, res) => {
     try {

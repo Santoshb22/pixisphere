@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const portfolioSchema = new mongoose(
+const portfolioSchema = new mongoose.Schema(
     {
         owner: {
             type: mongoose.Schema.Types.ObjectId,
