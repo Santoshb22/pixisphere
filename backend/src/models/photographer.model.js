@@ -44,7 +44,10 @@ const photographerSchema = new mongoose.Schema(
                 "Food",
                 "Street",
                 "Underwater",
-                "Drone"
+                "Drone",
+                "maternity",
+                "Maternity",
+                "Birthday"
                 ],
             required: true,
             validate: [arr => arr.length > 0, "At least one service type is required"]
