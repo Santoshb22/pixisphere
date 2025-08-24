@@ -26,6 +26,30 @@ const photographerSchema = new mongoose.Schema(
             trim: true,
         },
 
+        serviceTypes: {
+            type: [String], 
+            enum: [
+                "Portrait",
+                "Wedding",
+                "Fashion",
+                "Commercial",
+                "Landscape",
+                "Sports",
+                "Photojournalism",
+                "Architectural",
+                "Travel",
+                "FineArt",
+                "Macro",
+                "Astrophotography",
+                "Food",
+                "Street",
+                "Underwater",
+                "Drone"
+                ],
+            required: true,
+            validate: [arr => arr.length > 0, "At least one service type is required"]
+        },
+
         thumbnail: {
             cloudinaryThumbnailUrl: {
                 type: String
