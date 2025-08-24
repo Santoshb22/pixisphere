@@ -50,7 +50,7 @@ const updatePhotographerProfile = async (req, res) => {
             message: "Photographer profile updated successfully",
             photographerProfile: updatedProfile
         });
-
+        
     } catch (error) {
         console.log("Error ::", error.message);
         res.status(500).json({ message: error.message || "Something went wrong" });
