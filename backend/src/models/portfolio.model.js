@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const portfolioSchema = new mongoose(
     {
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Photographer"
+        },
+
         portfolio: [
             {
                 image: {
